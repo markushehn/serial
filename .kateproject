@@ -1,0 +1,5 @@
+{
+  "name": "project"
+, "files": [ { "directory": "./", "filters": ["*.c","*.cpp","*.h","*.hpp","*.S","*.cfg","makefile","*.md"], "recursive": 1} ]
+, "index": true
+}
