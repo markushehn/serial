@@ -1,3 +1,11 @@
+/**
+ * @file main.cpp
+ * @brief main source file
+ * @author Markus Hehn
+ * @date 08.07.2022
+ */
+
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -5,18 +13,16 @@
 #include <stdexcept>
 #include <chrono>
 #include <thread>
-
-
 #include "serial.hpp"
 
 
-
-int main(void)
+void serial_test(void)
 {
+    /* object generation test */
+    std::cout << "Serial object generation" << std::endl;
+    
     auto serial_obj = serial::Serial("/dev/ttyUSB0",115200,1.0);
-    //serial::Serial serial_obj2(serial_obj);
-    
-    
+    //serial::Serial serial_obj2(serial_obj);                       // if this line is uncommented, a compiler error is generated
     
     try
     {
@@ -28,41 +34,38 @@ int main(void)
         std::cout << "Exception: " << e.what() << std::endl;
     }
     
-    
-    
     serial_obj.timeout(2.0);
     std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-    std::cout << "test start" << std::endl;
     
     
     
-    
-    
-    
+    /* control line test */
+    std::cout << std::endl << "Serial control line test" << std::endl;
     serial_obj.rts(false);
+    std::cout << "RTS = " << serial_obj.rts() << std::endl;
     std::cout << "CTS = " << serial_obj.cts() << std::endl;
     
     
     
-    std::string test_string = "0123456789A\n";
+    /* write and read test */
+    std::cout << std::endl << "Serial write and read test" << std::endl;
     
-    std::vector<uint8_t> test_vector(10);
+    std::string write_string = "test string\n";
+    
+    std::vector<uint8_t> write_vector_1(10);
     for(int i = 0; i < 9; i++)
-        test_vector[i] = i;
-    test_vector[9] = '\n';
+        write_vector_1[i] = i;
+    write_vector_1[9] = '\n';
     
-    std::cout << "write num: " << serial_obj.write(test_string) << std::endl;
+    std::vector<uint8_t> write_vector_2(10);
+    for(int i = 0; i < 9; i++)
+        write_vector_2[i] = i + 20;
+    write_vector_2[9] = '\n';
     
+    std::cout << "write num: " << serial_obj.write(write_string) << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    
-    for(int i = 0; i < 9; i++)
-        test_vector[i] = i + 20;
-    
-    std::cout << "write num: " << serial_obj.write(test_vector) << std::endl;
-    
-    //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    //serial_obj.reset_input_buffer();
-    
+    serial_obj.reset_input_buffer();
+    std::cout << "write num: " << serial_obj.write(write_vector_1) << std::endl;
     
     try
     {
@@ -77,18 +80,12 @@ int main(void)
         std::cout << "SerialTimeoutException: " << e.what() << std::endl;
     }
     
-    
-    
-    for(int i = 0; i < 9; i++)
-        test_vector[i] = i + 20;
-    
-    std::cout << "write num: " << serial_obj.write(test_vector) << std::endl;
-    
+    std::cout << "write num: " << serial_obj.write(write_vector_2) << std::endl;
     
     try
     {
         std::vector<uint8_t> read_vector = serial_obj.read(10);
-        std::cout << "read 1: ";
+        std::cout << "read 2: ";
         for(int i = 0; i < 10; i++)
             std::cout << (int)read_vector[i] << " ";
         std::cout << std::endl;
@@ -98,60 +95,39 @@ int main(void)
         std::cout << "SerialTimeoutException: " << e.what() << std::endl;
     }
     
-    //std::cout << "readline 2: " << serial_obj.readline();
-    //std::cout << "readline 3: " << serial_obj.readline();
     
-    while(1);
     
-    //serial_obj.write(test);
+    /* readline test */
+    std::cout << std::endl << "readline test" << std::endl;
     
-    while(1)
+    std::cout << "write num: " << serial_obj.write(write_string) << std::endl;
+    
+    try
     {
-        try
+        std::string read_string = serial_obj.readline();
+        std::cout << read_string.length() << std::endl;
+        std::cout << read_string;
+        std::cout << "readline executed" << std::endl;
+        
+        for(uint32_t i = 0; i < read_string.length(); i++)
         {
-            
-            std::vector<uint8_t> data_vector;
-            data_vector = serial_obj.read(3);
-            std::cout << data_vector.size() << std::endl;
-            
-            for(uint32_t i = 0; i < data_vector.size(); i++)
-                std::cout << data_vector[i];
-            
-            std::cout << "read executed" << std::endl;
-            
+            std::cout << (uint32_t)read_string.c_str()[i] << " ";
         }
-        catch(serial::SerialError &e)
-        {
-            std::cout << "Exception: " << e.what() << std::endl;
-        }
+        std::cout << std::endl;
     }
-    
-    
-    /*while(1)
+    catch(serial::SerialError &e)
     {
-        try
-        {
-            std::string rx_string = serial_obj.readline();
-            std::cout << rx_string.length() << std::endl;
-            std::cout << rx_string;
-            std::cout << "readline executed" << std::endl;
-            
-            
-            for(uint32_t i = 0; i < rx_string.length(); i++)
-            {
-                std::cout << (uint32_t)rx_string.c_str()[i] << " ";
-            }
-            std::cout << std::endl;
-        }
-        catch(serial::SerialError &e)
-        {
-            std::cout << "Exception: " << e.what() << std::endl;
-        }
-    }*/
-    
+        std::cout << "Exception: " << e.what() << std::endl;
+    }
+}
 
-    
-    
-    
+
+
+int main(void)
+{
+    serial_test();
     return 0;
 }
+
+
+
