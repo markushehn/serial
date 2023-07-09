@@ -1,8 +1,10 @@
 /**
  * @file main.cpp
- * @brief main source file with library test. The test was executed with a FT232RL-based board with jumper wires connecting RTS and CTS, and TX and RX.
+ * @brief main source file
  * @author Markus Hehn
  * @date 09.07.2022
+ * 
+ * The library test was executed with a FT232RL-based board with jumper wires connecting RTS and CTS, and TX and RX.
  */
 
 
