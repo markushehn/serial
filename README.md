@@ -8,7 +8,9 @@ The function ```read``` waits for a specified data size.
 The function ```readline``` waits until a ```'\n'```-character is received and returns the received line.
 The line can be maximum 256 Bytes long, which is hardcoded.
 A timeout value for the read operation is also supported.
-If the timeout value is negative, the program is blocked as long as the requested data size is received in case of the ```read```-function or a ```'\n'```-character is received by usage of the ```readline```-function.
+If the timeout value is negative, the program is blocked as long as the requested data size is received in the case of the ```read```-function or a ```'\n'```-character is received by usage of the ```readline```-function.
+
+The library was tested with a FT232RL-based board with jumper wires connecting RTS and CTS, and TX and RX.
 
 
 
@@ -17,6 +19,7 @@ If the timeout value is negative, the program is blocked as long as the requeste
 ```.kateproject``` includes the project definition for the editor "Kate".
 ```./src``` include the source files and ```./inc``` the header files.
 ```./src/main.c``` executes the library test and shows the basic usage of the library.
+
 
 
 

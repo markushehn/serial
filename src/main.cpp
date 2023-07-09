@@ -1,6 +1,6 @@
 /**
  * @file main.cpp
- * @brief main source file
+ * @brief main source file with library test. The test was executed with a FT232RL-based board with jumper wires connecting RTS and CTS, and TX and RX.
  * @author Markus Hehn
  * @date 09.07.2022
  */
@@ -22,7 +22,7 @@ void serial_test(void)
     std::cout << "Serial object generation" << std::endl;
     
     auto serial_obj = serial::Serial("/dev/ttyUSB0",115200,1.0);
-    //serial::Serial serial_obj2(serial_obj);                       // if this line is uncommented, a compiler error is generated
+    //serial::Serial serial_obj2(serial_obj);                       // if this line is uncommented, a compiler error is generated, because of the deletion of the copy constructor
     
     try
     {
@@ -34,8 +34,9 @@ void serial_test(void)
         std::cout << "Exception: " << e.what() << std::endl;
     }
     
-    serial_obj.timeout(2.0);
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    serial_obj.timeout(2.5);
+    std::cout << "modified serial object:" << std::endl << serial_obj << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     
     
     
@@ -49,18 +50,9 @@ void serial_test(void)
     
     /* write and read test */
     std::cout << std::endl << "Serial write and read test" << std::endl;
-    
     std::string write_string = "test string\n";
-    
-    std::vector<uint8_t> write_vector_1{0 , 1 , 2, 3, 4, 5, 6, 7, 8, '\n'};
-    /*for(int i = 0; i < 9; i++)
-        write_vector_1[i] = i;
-    write_vector_1[9] = '\n';*/
-    
-    std::vector<uint8_t> write_vector_2{10 , 11 , 12, 13, 14, 15, 16, 17, 18, '\n'};
-    /*for(int i = 0; i < 9; i++)
-        write_vector_2[i] = i + 20;
-    write_vector_2[9] = '\n';*/
+    std::vector<uint8_t> write_vector_1{0 , 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , '\n'};
+    std::vector<uint8_t> write_vector_2{10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 , '\n'};
     
     std::cout << "write num: " << serial_obj.write(write_string) << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -95,29 +87,46 @@ void serial_test(void)
         std::cout << "SerialTimeoutException: " << e.what() << std::endl;
     }
     
+    try
+    {
+        std::vector<uint8_t> read_vector = serial_obj.read(10);                     // should generate a timeout
+    }
+    catch(serial::SerialTimeoutException &e)
+    {
+        std::cout << "SerialTimeoutException: " << e.what() << std::endl;
+    }
+    
     
     
     /* readline test */
     std::cout << std::endl << "readline test" << std::endl;
-    
-    std::cout << "write num: " << serial_obj.write(write_string) << std::endl;
+    std::cout << "write number: " << serial_obj.write(write_string) << std::endl;
     
     try
     {
         std::string read_string = serial_obj.readline();
-        std::cout << read_string.length() << std::endl;
-        std::cout << read_string;
-        std::cout << "readline executed" << std::endl;
+        std::cout << "received string size: " << read_string.length() << std::endl;
+        std::cout << "received string: " << read_string;
         
+        std::cout << "received bytes: ";
         for(uint32_t i = 0; i < read_string.length(); i++)
         {
             std::cout << (uint32_t)read_string.c_str()[i] << " ";
         }
         std::cout << std::endl;
     }
-    catch(serial::SerialError &e)
+    catch(serial::SerialTimeoutException &e)
     {
-        std::cout << "Exception: " << e.what() << std::endl;
+        std::cout << "SerialTimeoutException: " << e.what() << std::endl;
+    }
+    
+    try
+    {
+        std::string read_string = serial_obj.readline();                            // should generate a timeout
+    }
+    catch(serial::SerialTimeoutException &e)
+    {
+        std::cout << "SerialTimeoutException: " << e.what() << std::endl;
     }
 }
 
