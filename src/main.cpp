@@ -2,7 +2,7 @@
  * @file main.cpp
  * @brief main source file
  * @author Markus Hehn
- * @date 08.07.2022
+ * @date 09.07.2022
  */
 
 
@@ -52,15 +52,15 @@ void serial_test(void)
     
     std::string write_string = "test string\n";
     
-    std::vector<uint8_t> write_vector_1(10);
-    for(int i = 0; i < 9; i++)
+    std::vector<uint8_t> write_vector_1{0 , 1 , 2, 3, 4, 5, 6, 7, 8, '\n'};
+    /*for(int i = 0; i < 9; i++)
         write_vector_1[i] = i;
-    write_vector_1[9] = '\n';
+    write_vector_1[9] = '\n';*/
     
-    std::vector<uint8_t> write_vector_2(10);
-    for(int i = 0; i < 9; i++)
+    std::vector<uint8_t> write_vector_2{10 , 11 , 12, 13, 14, 15, 16, 17, 18, '\n'};
+    /*for(int i = 0; i < 9; i++)
         write_vector_2[i] = i + 20;
-    write_vector_2[9] = '\n';
+    write_vector_2[9] = '\n';*/
     
     std::cout << "write num: " << serial_obj.write(write_string) << std::endl;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
