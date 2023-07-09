@@ -3,8 +3,8 @@
 This library implements the access for the serial port based on the ```termios.h``` library and runs only on Linux systems.
 The functionality and syntax of this library is similar to PySerial.
 
-The supported serial data format is 8 data Bits, no parity and one stop bit and the supported baudrates are 9600, 19200, 38400, 57600, 115200, 1000000.
-The function ```read``` waits for a specified data size.
+The supported serial data format is 8 data Bits, no parity and one stop bit and the supported baudrates are 9600, 19200, 38400, 57600, 115200, and 1000000.
+The function ```read``` waits for the reception of a specified number of Bytes.
 The function ```readline``` waits until a ```'\n'```-character is received and returns the received line.
 The line can be maximum 256 Bytes long, which is hardcoded.
 A timeout value for the read operation is also supported.
