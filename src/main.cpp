@@ -8,6 +8,7 @@
  */
 
 
+#include "serial.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -15,7 +16,6 @@
 #include <stdexcept>
 #include <chrono>
 #include <thread>
-#include "serial.hpp"
 
 
 void serial_test(void)

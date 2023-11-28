@@ -2,7 +2,7 @@
  * @file serial.hpp
  * @brief Serial library header file
  * @author Markus Hehn
- * @date 07.11.2022
+ * @date 28.11.2023
  * 
  * Serial port library for Linux.
  * The functionality of this library is similar to PySerial.
@@ -11,6 +11,13 @@
 
 #ifndef SERIAL_HPP
 #define SERIAL_HPP
+
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cstdint>
+#include <stdexcept>
 
 
 namespace serial
